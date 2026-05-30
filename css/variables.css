@@ -1,0 +1,63 @@
+/* ══════════════════════════════════════════════════════════
+   CSS VARIABLES & THEME TOKENS
+   ══════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="light"] {
+  /* Typography scale */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.05rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.65vw, 1.35rem);
+  --text-xl: clamp(1.4rem, 1.15rem + 1vw, 2rem);
+  --text-2xl: clamp(2.2rem, 1.6rem + 2.2vw, 4.4rem);
+
+  /* Spacing scale */
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Light theme colors */
+  --color-bg: #f4f6f8;
+  --color-surface: rgba(255, 255, 255, 0.72);
+  --color-surface-2: rgba(244, 247, 250, 0.85);
+  --color-border: rgba(14, 22, 28, 0.10);
+  --color-text: #0d1418;
+  --color-text-muted: #5e6e76;
+  --color-primary: #0b7c88;
+  --color-primary-soft: rgba(11, 124, 136, 0.11);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(7, 19, 24, 0.07);
+  --shadow-md: 0 16px 52px rgba(7, 19, 24, 0.10);
+
+  /* Border radius */
+  --radius-md: 0.85rem;
+  --radius-lg: 1.4rem;
+
+  /* Transitions */
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Typography */
+  --font-body: 'Satoshi', system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  --color-bg: #070e12;
+  --color-surface: rgba(9, 18, 24, 0.68);
+  --color-surface-2: rgba(12, 22, 29, 0.86);
+  --color-border: rgba(160, 218, 228, 0.11);
+  --color-text: #e6f0f4;
+  --color-text-muted: #8ea2aa;
+  --color-primary: #72d4dd;
+  --color-primary-soft: rgba(114, 212, 221, 0.11);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 20px 70px rgba(0, 0, 0, 0.38);
+}
