@@ -1,6 +1,8 @@
 # Extra Dotted — Dot Portrait Renderer
 
-A modern web application that transforms any image or text into responsive dot portraits rendered on HTML canvas. Upload any image and watch it transform into living geometry made of dots.
+A responsive dot portrait renderer that converts images into geometric art on HTML canvas.
+Export as PNG, SVG, ASCII, or CSS, with built-in support for braille conversion and tactile printing.
+
 
 ## Accessibility & Braille Support
 

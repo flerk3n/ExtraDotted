@@ -30,3 +30,5 @@ yarn-error.log*
 # Build Output (if you add a build process later)
 dist/
 build/
+.vercel
+.vercelignore

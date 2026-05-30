@@ -1,0 +1,26 @@
+{
+  "name": "extra-dotted",
+  "version": "2.0.0",
+  "description": "Turn any image into accessible dot art. Real-time canvas rendering meets inclusive design.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "preview": "python3 -m http.server 8080"
+  },
+  "keywords": [
+    "dot-portrait",
+    "canvas",
+    "accessibility",
+    "braille",
+    "tactile-graphics",
+    "image-processing",
+    "svg-export",
+    "ascii-art"
+  ],
+  "author": "flerk3n",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flerk3n/extra-dotted.git"
+  }
+}
