@@ -77,7 +77,7 @@ function initCanvasZoom() {
   
   // Mouse/Touch drag start
   const handleDragStart = (clientX, clientY) => {
-    if (scale > 1) {
+    if (scale !== 1) { // Allow pan when zoomed in OR out
       isDragging = true;
       startX = clientX;
       startY = clientY;
@@ -101,7 +101,7 @@ function initCanvasZoom() {
   // Mouse/Touch drag end
   const handleDragEnd = () => {
     isDragging = false;
-    canvasElement.style.cursor = scale > 1 ? 'grab' : 'grab';
+    canvasElement.style.cursor = scale !== 1 ? 'grab' : 'default';
   };
   
   // Mouse events
@@ -126,8 +126,8 @@ function initCanvasZoom() {
       e.stopPropagation();
       initialDistance = getDistance(e.touches[0], e.touches[1]);
       initialScale = scale;
-    } else if (e.touches.length === 1 && scale > 1) {
-      // Single finger drag when zoomed
+    } else if (e.touches.length === 1 && scale !== 1) {
+      // Single finger drag when zoomed in or out
       e.preventDefault();
       handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
     }
@@ -188,10 +188,8 @@ function initCanvasZoom() {
     translateX = 0;
     translateY = 0;
     applyTransform();
-    canvasElement.style.cursor = 'grab';
+    canvasElement.style.cursor = 'default';
   });
-  
-  console.log('Canvas zoom and pan initialized successfully');
 }
 
 /**

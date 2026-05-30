@@ -7,20 +7,21 @@
   <meta name="description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports and tactile graphics for visually impaired users.">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="alternate icon" href="assets/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://extra-dotted.vercel.app/">
-  <meta property="og:title" content="Extra Dotted — Accessible Dot Portrait Renderer">
+  <meta property="og:title" content="Extra Dotted - Accessible Dot Portrait Renderer">
   <meta property="og:description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports and tactile graphics.">
   <meta property="og:image" content="https://extra-dotted.vercel.app/assets/og-image.png">
   
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://extra-dotted.vercel.app/">
-  <meta property="twitter:title" content="Extra Dotted — Accessible Dot Portrait Renderer">
+  <meta property="twitter:title" content="Extra Dotted - Accessible Dot Portrait Renderer">
   <meta property="twitter:description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports.">
   <meta property="twitter:image" content="https://extra-dotted.vercel.app/assets/og-image.png">
   
@@ -42,7 +43,7 @@
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="1.2"/><circle cx="8" cy="8" r="2.4"/><circle cx="3" cy="12" r="1"/><circle cx="12" cy="12" r="1.8"/></svg>
+          <img src="assets/logo.png" alt="Extra Dotted Logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
         <span class="brand-name">Extra Dotted</span>
         <span class="brand-tag">· <span class="hide-mobile">Dot Portrait</span></span>
@@ -119,6 +120,10 @@
               </div>
               <div class="export-section">
                 <div class="export-label">Export format</div>
+                <button class="export-btn export-btn-wide primary-fmt" id="exportCanvas" type="button">
+                  <span class="fmt">Export Canvas</span>
+                  <span class="desc">Current view as PNG (with zoom & pan)</span>
+                </button>
                 <div class="export-grid">
                   <button class="export-btn primary-fmt" id="exportPng" type="button">
                     <span class="fmt">PNG</span>

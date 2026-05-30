@@ -11,11 +11,75 @@ import { showToast } from './utils.js';
  * Initialize export button event listeners
  */
 export function initExport() {
+  document.getElementById('exportCanvas').addEventListener('click', exportCanvasView);
   document.getElementById('exportPng').addEventListener('click', exportPng);
   document.getElementById('topExportBtn').addEventListener('click', exportPng);
   document.getElementById('exportSvg').addEventListener('click', exportSvg);
   document.getElementById('exportAscii').addEventListener('click', exportAscii);
   document.getElementById('exportCss').addEventListener('click', exportCss);
+}
+
+/**
+ * Export current canvas view as-is (with zoom and pan)
+ */
+function exportCanvasView() {
+  const canvas = document.getElementById('heroCanvas');
+  const stage = document.querySelector('.art-stage');
+  
+  if (!canvas || !stage) {
+    showToast('Canvas not found');
+    return;
+  }
+  
+  try {
+    // Create a temporary canvas to capture the transformed view
+    const tempCanvas = document.createElement('canvas');
+    const rect = stage.getBoundingClientRect();
+    
+    // Set temp canvas size to match the visible stage
+    tempCanvas.width = rect.width * 2; // 2x for better quality
+    tempCanvas.height = rect.height * 2;
+    
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.scale(2, 2);
+    
+    // Fill with background
+    tempCtx.fillStyle = getComputedStyle(stage).backgroundColor || '#0a1214';
+    tempCtx.fillRect(0, 0, rect.width, rect.height);
+    
+    // Draw the canvas content
+    // Get the transform values
+    const transform = canvas.style.transform || '';
+    const scaleMatch = transform.match(/scale\(([\d.]+)\)/);
+    const translateMatch = transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
+    
+    const scale = scaleMatch ? parseFloat(scaleMatch[1]) : 1;
+    const translateX = translateMatch ? parseFloat(translateMatch[1]) : 0;
+    const translateY = translateMatch ? parseFloat(translateMatch[2]) : 0;
+    
+    // Apply transforms and draw
+    tempCtx.save();
+    tempCtx.translate(rect.width / 2, rect.height / 2);
+    tempCtx.translate(translateX, translateY);
+    tempCtx.scale(scale, scale);
+    tempCtx.translate(-canvas.width / 2, -canvas.height / 2);
+    tempCtx.drawImage(canvas, 0, 0);
+    tempCtx.restore();
+    
+    // Export
+    const dataURL = tempCanvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = `extra-dotted-canvas-${Date.now()}.png`;
+    a.click();
+    
+    // Track download
+    trackDownload('Canvas', `${Math.round(rect.width)}x${Math.round(rect.height)}`);
+    
+    showToast('Canvas exported successfully');
+  } catch (error) {
+    showToast('Export failed: ' + error.message);
+  }
 }
 
 /**
