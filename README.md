@@ -1,5 +1,7 @@
 # Extra Dotted — Dot Portrait Renderer
 
+🌐 **Live Demo:** [https://extra-dotted.vercel.app](https://extra-dotted.vercel.app)
+
 A responsive dot portrait renderer that converts images into geometric art on HTML canvas.
 Export as PNG, SVG, ASCII, or CSS, with built-in support for braille conversion and tactile printing.
 
