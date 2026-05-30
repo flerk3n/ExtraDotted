@@ -44,6 +44,14 @@ function handleImageUpload(e) {
     setActiveImage(img);
     render();
     URL.revokeObjectURL(url);
+    
+    // Track image upload
+    if (window.umami) {
+      window.umami.track('image-upload', {
+        fileType: file.type,
+        fileSize: Math.round(file.size / 1024) + 'KB'
+      });
+    }
   };
   
   img.src = url;

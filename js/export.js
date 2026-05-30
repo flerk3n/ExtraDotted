@@ -49,6 +49,19 @@ function fitImage(img, tw, th) {
 }
 
 /**
+ * Track download event with Umami
+ */
+function trackDownload(format, dimensions = null) {
+  if (window.umami) {
+    const eventData = { format };
+    if (dimensions) {
+      eventData.dimensions = dimensions;
+    }
+    window.umami.track('download', eventData);
+  }
+}
+
+/**
  * Export as PNG
  */
 function exportPng() {
@@ -69,6 +82,9 @@ function exportPng() {
   a.href = exportCanvas.toDataURL('image/png');
   a.download = `extra-dotted-portrait-${width}x${height}.png`;
   a.click();
+  
+  // Track download
+  trackDownload('PNG', `${width}x${height}`);
   
   showToast(`PNG exported at ${width}×${height}px`);
 }
@@ -135,6 +151,10 @@ ${circles}
   a.click();
   
   setTimeout(() => URL.revokeObjectURL(url), 3000);
+  
+  // Track download
+  trackDownload('SVG', `${width}x${height}`);
+  
   showToast(`SVG exported at ${width}×${height}px`);
 }
 
@@ -174,6 +194,9 @@ function exportAscii() {
   
   document.getElementById('asciiOutput').textContent = out;
   document.getElementById('asciiModal').style.display = 'block';
+  
+  // Track download
+  trackDownload('ASCII', `${cols}x${rows}`);
 }
 
 /**
@@ -233,4 +256,7 @@ ${gradients.join(',\n')};
   
   document.getElementById('cssOutput').textContent = css;
   document.getElementById('cssModal').style.display = 'block';
+  
+  // Track download
+  trackDownload('CSS', `${cols}x${rows}`);
 }

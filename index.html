@@ -3,7 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extra Dotted - Dot Portrait Renderer</title>
+  <title>Extra Dotted — Accessible Dot Portrait Renderer</title>
+  <meta name="description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports and tactile graphics for visually impaired users.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" href="assets/favicon.svg">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://extra-dotted.vercel.app/">
+  <meta property="og:title" content="Extra Dotted — Accessible Dot Portrait Renderer">
+  <meta property="og:description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports and tactile graphics.">
+  <meta property="og:image" content="https://extra-dotted.vercel.app/assets/og-image.png">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://extra-dotted.vercel.app/">
+  <meta property="twitter:title" content="Extra Dotted — Accessible Dot Portrait Renderer">
+  <meta property="twitter:description" content="Transform any image into accessible dot art. Real-time canvas rendering with braille-compatible exports.">
+  <meta property="twitter:image" content="https://extra-dotted.vercel.app/assets/og-image.png">
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#0b7c88" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#72d4dd" media="(prefers-color-scheme: dark)">
+  
+  <!-- Umami Analytics -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="fb52b47a-1288-4669-b555-11e0b08e893f"></script>
+  
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
@@ -18,7 +45,7 @@
           <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="1.2"/><circle cx="8" cy="8" r="2.4"/><circle cx="3" cy="12" r="1"/><circle cx="12" cy="12" r="1.8"/></svg>
         </div>
         <span class="brand-name">Extra Dotted</span>
-        <span class="brand-tag">· Dot Portrait</span>
+        <span class="brand-tag">· <span class="hide-mobile">Dot Portrait</span></span>
       </div>
       <div class="topbar-right">
         <button class="icon-btn" id="topExportBtn" type="button" aria-label="Export">
@@ -31,21 +58,22 @@
 
     <main>
       <section class="hero">
-        <div class="hero-inner">
-          <div class="copy">
-            <div class="eyebrow">Dot portrait renderer</div>
-            <h1>Images, rebuilt as living dots.</h1>
-            <p>Upload any image or text. Extra Dotted renders it as a responsive dot portrait directly on a transparent canvas no flat image files, no PNG heroes, just living geometry that breathes with your layout.</p>
-            <p style="font-size: var(--text-sm); color: var(--color-primary); margin-top: var(--space-3); margin-bottom: var(--space-8);">
-              <strong>Accessibility-first:</strong> Generate braille-compatible dot patterns and tactile graphics for visually impaired users.
-            </p>
+        <div class="hero-header">
+          <div class="eyebrow">Dot portrait renderer</div>
+          <h1>Images, rebuilt as living dots.</h1>
+          <p>Upload any image or text. Extra Dotted renders it as a responsive dot portrait directly on a transparent canvas — no flat image files, no PNG heroes, just living geometry that breathes with your layout.</p>
+          <p class="accessibility-note">
+            <strong>Accessibility-first:</strong> Generate braille-compatible dot patterns and tactile graphics for visually impaired users.
+          </p>
+        </div>
 
-            <div class="panel">
-              <div class="panel-head">
-                <strong>Render controls</strong>
-                <span id="renderStatus">Ready</span>
-              </div>
-              <hr class="panel-divider"/>
+        <div class="hero-inner">
+          <div class="panel">
+            <div class="panel-head">
+              <strong>Render controls</strong>
+              <span id="renderStatus">Ready</span>
+            </div>
+            <hr class="panel-divider"/>
 
               <div class="controls-grid">
                 <div class="field">
@@ -110,7 +138,6 @@
                   </button>
                 </div>
               </div>
-            </div>
           </div>
 
           <div class="art-wrap">
@@ -120,9 +147,12 @@
               <div class="scanline" aria-hidden="true"></div>
               <div class="stage-caption">
                 <span>Extra Dotted · Canvas</span>
-                <span id="dotCount">dots</span>
+                <span id="dotCount">— dots</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
           </div>
         </div>
       </section>

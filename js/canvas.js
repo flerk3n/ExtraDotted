@@ -26,7 +26,11 @@ const renderStatus = document.getElementById('renderStatus');
  */
 export function initCanvas() {
   activeImage = createDemoImage();
-  activeImage.onload = render;
+  activeImage.onload = () => {
+    render();
+    // Initialize zoom after canvas is rendered
+    setTimeout(initCanvasZoom, 100);
+  };
   
   // Handle window resize
   let resizeTimeout;
@@ -34,6 +38,160 @@ export function initCanvas() {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(render, 80);
   });
+}
+
+/**
+ * Initialize pinch-to-zoom for canvas
+ */
+function initCanvasZoom() {
+  const stageElement = document.querySelector('.art-stage');
+  const canvasElement = document.querySelector('#heroCanvas');
+  
+  if (!stageElement || !canvasElement) {
+    console.error('Canvas elements not found');
+    return;
+  }
+  
+  let scale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let initialDistance = 0;
+  let initialScale = 1;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialTranslateX = 0;
+  let initialTranslateY = 0;
+  
+  // Get distance between two touch points
+  const getDistance = (touch1, touch2) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+  
+  // Apply transform
+  const applyTransform = () => {
+    canvasElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  };
+  
+  // Mouse/Touch drag start
+  const handleDragStart = (clientX, clientY) => {
+    if (scale > 1) {
+      isDragging = true;
+      startX = clientX;
+      startY = clientY;
+      initialTranslateX = translateX;
+      initialTranslateY = translateY;
+      canvasElement.style.cursor = 'grabbing';
+    }
+  };
+  
+  // Mouse/Touch drag move
+  const handleDragMove = (clientX, clientY) => {
+    if (isDragging) {
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+      translateX = initialTranslateX + dx;
+      translateY = initialTranslateY + dy;
+      applyTransform();
+    }
+  };
+  
+  // Mouse/Touch drag end
+  const handleDragEnd = () => {
+    isDragging = false;
+    canvasElement.style.cursor = scale > 1 ? 'grab' : 'grab';
+  };
+  
+  // Mouse events
+  canvasElement.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    handleDragStart(e.clientX, e.clientY);
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    handleDragMove(e.clientX, e.clientY);
+  });
+  
+  document.addEventListener('mouseup', () => {
+    handleDragEnd();
+  });
+  
+  // Touch start
+  stageElement.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      e.preventDefault();
+      e.stopPropagation();
+      initialDistance = getDistance(e.touches[0], e.touches[1]);
+      initialScale = scale;
+    } else if (e.touches.length === 1 && scale > 1) {
+      // Single finger drag when zoomed
+      e.preventDefault();
+      handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: false });
+  
+  // Touch move
+  stageElement.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      // Pinch zoom
+      e.preventDefault();
+      e.stopPropagation();
+      const currentDistance = getDistance(e.touches[0], e.touches[1]);
+      scale = initialScale * (currentDistance / initialDistance);
+      scale = Math.min(Math.max(0.5, scale), 3);
+      applyTransform();
+    } else if (e.touches.length === 1 && isDragging) {
+      // Single finger drag
+      e.preventDefault();
+      handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: false });
+  
+  // Touch end
+  stageElement.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+      initialDistance = 0;
+    }
+    if (e.touches.length === 0) {
+      handleDragEnd();
+    }
+  });
+  
+  // Mouse wheel zoom (for desktop)
+  stageElement.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      const delta = e.deltaY > 0 ? 0.95 : 1.05;
+      const oldScale = scale;
+      scale *= delta;
+      scale = Math.min(Math.max(0.5, scale), 3);
+      
+      // Adjust translation to zoom towards mouse position
+      const rect = canvasElement.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left - rect.width / 2;
+      const mouseY = e.clientY - rect.top - rect.height / 2;
+      
+      translateX -= mouseX * (scale - oldScale) / oldScale;
+      translateY -= mouseY * (scale - oldScale) / oldScale;
+      
+      applyTransform();
+    }
+  }, { passive: false });
+  
+  // Double-click to reset
+  stageElement.addEventListener('dblclick', () => {
+    scale = 1;
+    translateX = 0;
+    translateY = 0;
+    applyTransform();
+    canvasElement.style.cursor = 'grab';
+  });
+  
+  console.log('Canvas zoom and pan initialized successfully');
 }
 
 /**

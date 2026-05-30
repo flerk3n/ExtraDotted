@@ -5,19 +5,23 @@
 /* ── HERO ───────────────────────────────────────────────── */
 .hero {
   position: relative;
-  min-height: calc(100vh - 73px);
-  display: grid;
-  place-items: center;
   padding: clamp(var(--space-8), 5vw, var(--space-16));
   overflow: hidden;
 }
 
+.hero-header {
+  max-width: 900px;
+  margin: 0 auto var(--space-12);
+  text-align: center;
+}
+
 .hero-inner {
-  width: min(1200px, 100%);
+  width: min(1400px, 100%);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 0.80fr 1.20fr;
-  gap: clamp(var(--space-8), 5vw, var(--space-16));
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(var(--space-6), 4vw, var(--space-12));
+  align-items: start;
 }
 
 .eyebrow {
@@ -28,18 +32,24 @@
   color: var(--color-primary);
 }
 
-.copy h1 {
+.hero-header h1 {
   margin: 0 0 var(--space-4);
   font-size: var(--text-2xl);
   line-height: 0.96;
   letter-spacing: -0.055em;
-  max-width: 9ch;
 }
 
-.copy p {
-  margin: 0 0 var(--space-8);
+.hero-header p {
+  margin: 0 0 var(--space-4);
   color: var(--color-text-muted);
-  max-width: 48ch;
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+.accessibility-note {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  margin-top: var(--space-3);
 }
 
 /* ── FEATURES ───────────────────────────────────────────── */
@@ -57,10 +67,18 @@
 
 /* ── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width: 980px) {
-  .hero-inner,
-  .controls-grid,
-  .export-grid {
+  .hero-inner {
     grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .hero-header {
+    text-align: left;
+    margin-bottom: var(--space-8);
+  }
+
+  .controls-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .features-inner {
@@ -68,12 +86,7 @@
   }
 
   .hero {
-    min-height: auto;
     padding-block: var(--space-8) var(--space-12);
-  }
-
-  .copy h1 {
-    max-width: 10ch;
   }
 
   .art-wrap {
@@ -81,7 +94,7 @@
   }
 
   .art-stage {
-    width: min(100%, 620px);
+    max-width: 100%;
   }
 
   .export-grid {
@@ -92,5 +105,19 @@
 @media (max-width: 640px) {
   .features-inner {
     grid-template-columns: 1fr;
+  }
+  
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .hide-mobile {
+    display: none;
+  }
+  
+  .brand-tag {
+    display: none;
   }
 }

@@ -53,6 +53,10 @@
   color: var(--color-text-muted);
 }
 
+.hide-mobile {
+  display: inline;
+}
+
 .topbar-right {
   display: flex;
   gap: var(--space-3);
@@ -93,8 +97,8 @@
   background: color-mix(in srgb, var(--color-surface) 95%, transparent);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
-  max-width: 480px;
   backdrop-filter: blur(20px);
+  height: fit-content;
 }
 
 .panel-head {
@@ -204,6 +208,7 @@
 .export-btn:hover {
   transform: translateY(-1px);
   border-color: color-mix(in srgb, var(--color-primary) 38%, var(--color-border));
+  background: color-mix(in srgb, var(--color-surface) 95%, transparent);
 }
 
 .export-btn .fmt {
@@ -218,12 +223,17 @@
 }
 
 .export-btn.primary-fmt {
-  background: color-mix(in srgb, var(--color-primary) 13%, transparent);
+  background: color-mix(in srgb, var(--color-surface-2) 90%, transparent);
+  border-color: var(--color-border);
+}
+
+.export-btn.primary-fmt:hover {
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
   border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .export-btn.primary-fmt .fmt {
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 /* ── TOAST ──────────────────────────────────────────────── */
@@ -255,14 +265,14 @@
 /* ── ART STAGE ──────────────────────────────────────────── */
 .art-wrap {
   position: relative;
-  min-height: 70svh;
   display: grid;
   place-items: center;
+  height: 100%;
 }
 
 .halo {
   position: absolute;
-  width: min(58vw, 660px);
+  width: min(45vw, 450px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(
@@ -278,7 +288,8 @@
 
 .art-stage {
   position: relative;
-  width: min(100%, 800px);
+  width: 100%;
+  max-width: 600px;
   aspect-ratio: 1/1;
   border-radius: 28px;
   overflow: hidden;
@@ -291,6 +302,8 @@
   box-shadow: var(--shadow-md);
   isolation: isolate;
   z-index: 2;
+  touch-action: pan-x pan-y pinch-zoom;
+  user-select: none;
 }
 
 .art-stage::before {
@@ -305,6 +318,7 @@
   background-size: 18px 18px;
   opacity: 0.30;
   z-index: 1;
+  border-radius: 28px;
 }
 
 .art-stage::after {
@@ -316,6 +330,7 @@
     radial-gradient(circle at center, transparent 42%, color-mix(in srgb, var(--color-bg) 14%, transparent) 100%);
   z-index: 2;
   pointer-events: none;
+  border-radius: 28px;
 }
 
 canvas {
@@ -325,6 +340,13 @@ canvas {
   height: 100%;
   display: block;
   z-index: 3;
+  transition: transform 0.15s ease-out;
+  cursor: grab;
+  border-radius: 28px;
+}
+
+canvas:active {
+  cursor: grabbing;
 }
 
 .scanline {
@@ -374,6 +396,13 @@ canvas {
   background: color-mix(in srgb, var(--color-surface) 90%, transparent);
   border: 1px solid var(--color-border);
   backdrop-filter: blur(12px);
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.feat:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  box-shadow: var(--shadow-md);
 }
 
 .feat-tag {
