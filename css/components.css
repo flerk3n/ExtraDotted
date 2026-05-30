@@ -447,3 +447,79 @@ canvas:active {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
+
+/* ── FOOTER ─────────────────────────────────────────────── */
+.footer {
+  padding: var(--space-8) clamp(var(--space-4), 4vw, var(--space-12));
+  border-top: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 50%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.footer-text {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.footer-text strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.heart {
+  color: #e74c3c;
+  animation: heartbeat 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(1.1);
+  }
+  20%, 40% {
+    transform: scale(1);
+  }
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+  text-decoration: none;
+}
+
+.github-link:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+}
+
+.github-link svg {
+  width: 20px;
+  height: 20px;
+}
