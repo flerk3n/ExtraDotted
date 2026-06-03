@@ -77,14 +77,13 @@ function initCanvasZoom() {
   
   // Mouse/Touch drag start
   const handleDragStart = (clientX, clientY) => {
-    if (scale !== 1) { // Allow pan when zoomed in OR out
-      isDragging = true;
-      startX = clientX;
-      startY = clientY;
-      initialTranslateX = translateX;
-      initialTranslateY = translateY;
-      canvasElement.style.cursor = 'grabbing';
-    }
+    // Allow pan at any time
+    isDragging = true;
+    startX = clientX;
+    startY = clientY;
+    initialTranslateX = translateX;
+    initialTranslateY = translateY;
+    canvasElement.style.cursor = 'grabbing';
   };
   
   // Mouse/Touch drag move
@@ -101,7 +100,7 @@ function initCanvasZoom() {
   // Mouse/Touch drag end
   const handleDragEnd = () => {
     isDragging = false;
-    canvasElement.style.cursor = scale !== 1 ? 'grab' : 'default';
+    canvasElement.style.cursor = 'grab';
   };
   
   // Mouse events
@@ -126,8 +125,8 @@ function initCanvasZoom() {
       e.stopPropagation();
       initialDistance = getDistance(e.touches[0], e.touches[1]);
       initialScale = scale;
-    } else if (e.touches.length === 1 && scale !== 1) {
-      // Single finger drag when zoomed in or out
+    } else if (e.touches.length === 1) {
+      // Single finger drag at any time
       e.preventDefault();
       handleDragStart(e.touches[0].clientX, e.touches[0].clientY);
     }
@@ -192,7 +191,7 @@ function initCanvasZoom() {
     translateX = 0;
     translateY = 0;
     applyTransform();
-    canvasElement.style.cursor = 'default';
+    canvasElement.style.cursor = 'grab';
   });
   
   // Show tooltip on first interaction
@@ -286,7 +285,7 @@ function lum(r, g, b) {
 }
 
 /**
- * Fit image within target dimensions (cover mode)
+ * Fit image within target dimensions (contain mode)
  */
 function fitImage(img, tw, th) {
   const ir = img.width / img.height;
@@ -294,15 +293,17 @@ function fitImage(img, tw, th) {
   let dw, dh, ox, oy;
   
   if (ir > tr) {
-    dh = th;
-    dw = dh * ir;
-    ox = (tw - dw) / 2;
-    oy = 0;
-  } else {
+    // Image is wider - fit to width
     dw = tw;
     dh = dw / ir;
     ox = 0;
     oy = (th - dh) / 2;
+  } else {
+    // Image is taller - fit to height
+    dh = th;
+    dw = dh * ir;
+    ox = (tw - dw) / 2;
+    oy = 0;
   }
   
   return { dw, dh, ox, oy };
