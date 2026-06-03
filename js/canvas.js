@@ -160,23 +160,27 @@ function initCanvasZoom() {
     }
   });
   
-  // Mouse wheel zoom (for desktop)
+  // Mouse wheel zoom (works for both mouse scroll and trackpad)
   stageElement.addEventListener('wheel', (e) => {
+    // Check if it's a zoom gesture (Ctrl/Cmd key is automatically set by browser for pinch)
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
       e.stopPropagation();
+      
       const delta = e.deltaY > 0 ? 0.95 : 1.05;
       const oldScale = scale;
       scale *= delta;
       scale = Math.min(Math.max(0.5, scale), 3);
       
-      // Adjust translation to zoom towards mouse position
+      // Zoom towards mouse cursor position
       const rect = canvasElement.getBoundingClientRect();
       const mouseX = e.clientX - rect.left - rect.width / 2;
       const mouseY = e.clientY - rect.top - rect.height / 2;
       
-      translateX -= mouseX * (scale - oldScale) / oldScale;
-      translateY -= mouseY * (scale - oldScale) / oldScale;
+      if (oldScale !== 0) {
+        translateX -= mouseX * (scale - oldScale) / oldScale;
+        translateY -= mouseY * (scale - oldScale) / oldScale;
+      }
       
       applyTransform();
     }
