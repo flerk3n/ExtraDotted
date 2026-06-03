@@ -194,6 +194,67 @@ function initCanvasZoom() {
     applyTransform();
     canvasElement.style.cursor = 'default';
   });
+  
+  // Show tooltip on first interaction
+  initCanvasTooltip(stageElement);
+}
+
+/**
+ * Initialize canvas tooltip
+ */
+function initCanvasTooltip(stageElement) {
+  const tooltip = document.getElementById('canvasTooltip');
+  const closeBtn = document.getElementById('closeTooltip');
+  
+  if (!tooltip || !closeBtn) return;
+  
+  // Check if user has seen the tooltip before
+  const hasSeenTooltip = localStorage.getItem('canvasTooltipSeen');
+  
+  let interactionTimeout;
+  
+  // Show tooltip on first interaction
+  const showTooltip = () => {
+    if (!hasSeenTooltip) {
+      tooltip.classList.add('show');
+      
+      // Auto-hide after 8 seconds
+      interactionTimeout = setTimeout(() => {
+        hideTooltip();
+      }, 8000);
+    }
+  };
+  
+  // Hide tooltip
+  const hideTooltip = () => {
+    tooltip.classList.remove('show');
+    localStorage.setItem('canvasTooltipSeen', 'true');
+    clearTimeout(interactionTimeout);
+  };
+  
+  // Show on first mouse enter
+  stageElement.addEventListener('mouseenter', showTooltip, { once: true });
+  
+  // Show on first touch
+  stageElement.addEventListener('touchstart', showTooltip, { once: true });
+  
+  // Close button
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hideTooltip();
+  });
+  
+  // Hide when user starts interacting (zoom/pan)
+  let hasInteracted = false;
+  const hideOnInteraction = () => {
+    if (!hasInteracted) {
+      hasInteracted = true;
+      setTimeout(hideTooltip, 2000); // Hide 2 seconds after first interaction
+    }
+  };
+  
+  stageElement.addEventListener('wheel', hideOnInteraction);
+  stageElement.addEventListener('touchmove', hideOnInteraction);
 }
 
 /**
