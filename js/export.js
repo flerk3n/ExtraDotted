@@ -11,7 +11,6 @@ import { showToast } from './utils.js';
  * Initialize export button event listeners
  */
 export function initExport() {
-  document.getElementById('exportCanvas').addEventListener('click', exportCanvasView);
   document.getElementById('exportPng').addEventListener('click', exportPng);
   document.getElementById('topExportBtn').addEventListener('click', exportPng);
   document.getElementById('exportSvg').addEventListener('click', exportSvg);
@@ -20,9 +19,9 @@ export function initExport() {
 }
 
 /**
- * Export current canvas view as-is (with zoom and pan)
+ * Export current canvas view as PNG (with zoom and pan)
  */
-function exportCanvasView() {
+function exportPng() {
   const canvas = document.getElementById('heroCanvas');
   const stage = document.querySelector('.art-stage');
   
@@ -31,24 +30,30 @@ function exportCanvasView() {
     return;
   }
   
+  const activeImage = getActiveImage();
+  if (!activeImage || !activeImage.complete || !activeImage.naturalWidth) {
+    showToast('Upload an image first');
+    return;
+  }
+  
   try {
     // Create a temporary canvas to capture the transformed view
     const tempCanvas = document.createElement('canvas');
     const rect = stage.getBoundingClientRect();
     
-    // Set temp canvas size to match the visible stage
-    tempCanvas.width = rect.width * 2; // 2x for better quality
+    // Set temp canvas size to match the visible stage at 2x resolution
+    tempCanvas.width = rect.width * 2;
     tempCanvas.height = rect.height * 2;
     
     const tempCtx = tempCanvas.getContext('2d');
     tempCtx.scale(2, 2);
     
     // Fill with background
-    tempCtx.fillStyle = getComputedStyle(stage).backgroundColor || '#0a1214';
+    const bgColor = getComputedStyle(stage).backgroundColor || '#0a1214';
+    tempCtx.fillStyle = bgColor;
     tempCtx.fillRect(0, 0, rect.width, rect.height);
     
-    // Draw the canvas content
-    // Get the transform values
+    // Get the transform values from canvas
     const transform = canvas.style.transform || '';
     const scaleMatch = transform.match(/scale\(([\d.]+)\)/);
     const translateMatch = transform.match(/translate\(([-\d.]+)px,\s*([-\d.]+)px\)/);
@@ -57,7 +62,7 @@ function exportCanvasView() {
     const translateX = translateMatch ? parseFloat(translateMatch[1]) : 0;
     const translateY = translateMatch ? parseFloat(translateMatch[2]) : 0;
     
-    // Apply transforms and draw
+    // Apply transforms and draw canvas content
     tempCtx.save();
     tempCtx.translate(rect.width / 2, rect.height / 2);
     tempCtx.translate(translateX, translateY);
@@ -66,17 +71,19 @@ function exportCanvasView() {
     tempCtx.drawImage(canvas, 0, 0);
     tempCtx.restore();
     
-    // Export
+    // Export as PNG
     const dataURL = tempCanvas.toDataURL('image/png');
     const a = document.createElement('a');
+    const width = Math.round(rect.width * 2); // Actual export resolution
+    const height = Math.round(rect.height * 2);
     a.href = dataURL;
-    a.download = `extra-dotted-canvas-${Date.now()}.png`;
+    a.download = `extra-dotted-portrait-${width}x${height}.png`;
     a.click();
     
     // Track download
-    trackDownload('Canvas', `${Math.round(rect.width)}x${Math.round(rect.height)}`);
+    trackDownload('PNG', `${width}x${height}`);
     
-    showToast('Canvas exported successfully');
+    showToast(`PNG exported at ${width}×${height}px`);
   } catch (error) {
     showToast('Export failed: ' + error.message);
   }
@@ -90,7 +97,7 @@ function lum(r, g, b) {
 }
 
 /**
- * Fit image within target dimensions (cover mode)
+ * Fit image within target dimensions (contain mode)
  */
 function fitImage(img, tw, th) {
   const ir = img.width / img.height;
@@ -98,15 +105,17 @@ function fitImage(img, tw, th) {
   let dw, dh, ox, oy;
   
   if (ir > tr) {
-    dh = th;
-    dw = dh * ir;
-    ox = (tw - dw) / 2;
-    oy = 0;
-  } else {
+    // Image is wider - fit to width
     dw = tw;
     dh = dw / ir;
     ox = 0;
     oy = (th - dh) / 2;
+  } else {
+    // Image is taller - fit to height
+    dh = th;
+    dw = dh * ir;
+    ox = (tw - dw) / 2;
+    oy = 0;
   }
   
   return { dw, dh, ox, oy };
@@ -123,34 +132,6 @@ function trackDownload(format, dimensions = null) {
     }
     window.umami.track('download', eventData);
   }
-}
-
-/**
- * Export as PNG
- */
-function exportPng() {
-  const activeImage = getActiveImage();
-  if (!activeImage || !activeImage.complete || !activeImage.naturalWidth) {
-    showToast('Upload an image first');
-    return;
-  }
-  
-  const { width, height } = getExportDimensions();
-  const exportCanvas = document.createElement('canvas');
-  exportCanvas.width = width;
-  exportCanvas.height = height;
-  
-  renderToCanvas(exportCanvas, width, height);
-  
-  const a = document.createElement('a');
-  a.href = exportCanvas.toDataURL('image/png');
-  a.download = `extra-dotted-portrait-${width}x${height}.png`;
-  a.click();
-  
-  // Track download
-  trackDownload('PNG', `${width}x${height}`);
-  
-  showToast(`PNG exported at ${width}×${height}px`);
 }
 
 /**
