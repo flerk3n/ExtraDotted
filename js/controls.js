@@ -12,6 +12,9 @@ const dotGapEl = document.getElementById('dotGap');
 const dotScaleEl = document.getElementById('dotScale');
 const contrastEl = document.getElementById('contrast');
 const toneColorEl = document.getElementById('toneColor');
+const sizePresetEl = document.getElementById('sizePreset');
+const exportWidthEl = document.getElementById('exportWidth');
+const exportHeightEl = document.getElementById('exportHeight');
 
 // Value display elements
 const dotGapVal = document.getElementById('dotGapValue');
@@ -28,6 +31,93 @@ export function initControls() {
   // Control inputs
   const controls = [dotGapEl, dotScaleEl, contrastEl, toneColorEl, colorMode];
   controls.forEach(el => el.addEventListener('input', handleControlChange));
+  
+  // Size preset handler
+  sizePresetEl.addEventListener('change', handlePresetChange);
+  
+  // Manual width/height change should set preset to "custom"
+  exportWidthEl.addEventListener('input', () => {
+    sizePresetEl.value = 'custom';
+    updateCanvasSize();
+  });
+  
+  exportHeightEl.addEventListener('input', () => {
+    sizePresetEl.value = 'custom';
+    updateCanvasSize();
+  });
+}
+
+/**
+ * Handle size preset changes
+ */
+function handlePresetChange() {
+  const preset = sizePresetEl.value;
+  
+  if (preset === 'custom') {
+    return;
+  }
+  
+  // Parse preset value (e.g., "1080x1920" -> width: 1080, height: 1920)
+  const [width, height] = preset.split('x').map(Number);
+  
+  if (width && height) {
+    exportWidthEl.value = width;
+    exportHeightEl.value = height;
+    updateCanvasSize();
+  }
+}
+
+/**
+ * Update canvas size based on export dimensions
+ */
+function updateCanvasSize() {
+  const canvas = document.getElementById('heroCanvas');
+  const stage = document.querySelector('.art-stage');
+  
+  if (!canvas || !stage) return;
+  
+  let width = parseInt(exportWidthEl.value) || 1200;
+  let height = parseInt(exportHeightEl.value) || 1200;
+  
+  // Enforce 4K limits
+  const MAX_WIDTH = 3840;
+  const MAX_HEIGHT = 2160;
+  
+  if (width > MAX_WIDTH) {
+    width = MAX_WIDTH;
+    exportWidthEl.value = MAX_WIDTH;
+    showToast(`Max width is ${MAX_WIDTH}px (4K limit)`);
+  }
+  
+  if (height > MAX_HEIGHT) {
+    height = MAX_HEIGHT;
+    exportHeightEl.value = MAX_HEIGHT;
+    showToast(`Max height is ${MAX_HEIGHT}px (4K limit)`);
+  }
+  
+  // Calculate aspect ratio
+  const aspectRatio = width / height;
+  
+  // Update stage aspect ratio
+  stage.style.aspectRatio = `${width} / ${height}`;
+  
+  // Re-render canvas with new dimensions
+  render();
+}
+
+/**
+ * Show toast notification
+ */
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  
+  toast.textContent = message;
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
 
 /**
@@ -91,7 +181,15 @@ export function getControls() {
  * Get export dimensions
  */
 export function getExportDimensions() {
-  const width = parseInt(document.getElementById('exportWidth').value) || 1200;
-  const height = parseInt(document.getElementById('exportHeight').value) || 1200;
+  const MAX_WIDTH = 3840;
+  const MAX_HEIGHT = 3840;
+  
+  let width = parseInt(document.getElementById('exportWidth').value) || 1200;
+  let height = parseInt(document.getElementById('exportHeight').value) || 1200;
+  
+  // Enforce 4K limits
+  width = Math.min(Math.max(100, width), MAX_WIDTH);
+  height = Math.min(Math.max(100, height), MAX_HEIGHT);
+  
   return { width, height };
 }
